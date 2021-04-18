@@ -8,8 +8,7 @@ import yacs.config
 
 def create_model(config: yacs.config.CfgNode) -> nn.Module:
     module = importlib.import_module(
-        'pytorch_image_classification.models'
-        f'.{config.model.type}.{config.model.name}')
+        f'pytorch_image_classification.models.{config.model.type}.{config.model.name}')
     model = getattr(module, 'Network')(config)
     device = torch.device(config.device)
     model.to(device)

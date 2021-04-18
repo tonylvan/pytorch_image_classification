@@ -78,6 +78,7 @@ class BasicBlock(nn.Module):
 
         self.shortcut = nn.Sequential()
         if in_channels != out_channels:
+            print(in_channels, out_channels,stride)
             self.shortcut.add_module(
                 'skip', SkipConnection(in_channels, out_channels, stride))
 
@@ -118,7 +119,6 @@ class Network(nn.Module):
             initial_channels * 2,
             initial_channels * 4,
         ]
-
         self.conv = nn.Conv2d(config.dataset.n_channels,
                               16,
                               kernel_size=3,

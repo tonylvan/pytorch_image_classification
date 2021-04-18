@@ -83,5 +83,46 @@ def create_dataset(config: yacs.config.CfgNode,
         val_dataset = torchvision.datasets.ImageFolder(dataset_dir / 'val',
                                                        transform=val_transform)
         return train_dataset, val_dataset
+    elif config.dataset.name == 'EMNIST':
+        module = getattr(torchvision.datasets, config.dataset.name)
+        if is_train:
+            if config.train.use_test_as_val:
+                train_transform = create_transform(config, is_train=True)
+                val_transform = create_transform(config, is_train=False)
+                train_dataset = module(config.dataset.dataset_dir,
+                                       train=is_train, split='bymerge',
+                                       transform=train_transform,
+                                       download=True)
+                test_dataset = module(config.dataset.dataset_dir,
+                                      train=False, split='bymerge',
+                                      transform=val_transform,
+                                      download=True)
+                return train_dataset, test_dataset
+            else:
+                dataset = module(config.dataset.dataset_dir,
+                                 train=is_train, split='bymerge',
+                                 transform=None,
+                                 download=True)
+                val_ratio = config.train.val_ratio
+                assert val_ratio < 1
+                val_num = int(len(dataset) * val_ratio)
+                train_num = len(dataset) - val_num
+                lengths = [train_num, val_num]
+                train_subset, val_subset = torch.utils.data.dataset.random_split(
+                    dataset, lengths)
+
+                train_transform = create_transform(config, is_train=True)
+                val_transform = create_transform(config, is_train=False)
+                train_dataset = SubsetDataset(train_subset, train_transform)
+                val_dataset = SubsetDataset(val_subset, val_transform)
+                return train_dataset, val_dataset
+        else:
+            transform = create_transform(config, is_train=False)
+            dataset = module(config.dataset.dataset_dir,
+                             train=is_train, split='bymerge',
+                             transform=transform,
+                             download=True)
+            return dataset
+
     else:
         raise ValueError()

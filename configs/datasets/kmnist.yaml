@@ -1,4 +1,4 @@
-dataset:
+ dataset:
   name: KMNIST
   dataset_dir: ''
   image_size: 28

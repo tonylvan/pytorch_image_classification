@@ -1,6 +1,6 @@
 device: cuda
 dataset:
-  name: CIFAR10
+  name: EMNIST
 model:
   type: cifar
   name: shake_shake
@@ -18,7 +18,7 @@ train:
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/cifar10/shake_shake/exp00
+  output_dir: experiments/emnist/shake_shake/exp00
   log_period: 100
   checkpoint_period: 100
   val_ratio: 0.0

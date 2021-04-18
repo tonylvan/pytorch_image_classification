@@ -32,6 +32,9 @@ def _get_dataset_stats(
     elif name == 'MNIST':
         mean = np.array([0.1307])
         std = np.array([0.3081])
+    elif name == 'EMNIST':
+        mean = np.array([0.1307])
+        std = np.array([0.3081])
     elif name == 'FashionMNIST':
         mean = np.array([0.2860])
         std = np.array([0.3530])
